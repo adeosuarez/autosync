@@ -44,7 +44,7 @@ class MainActivity : Activity() {
         }
 
         val title = TextView(this).apply {
-            text = "XmrGo  -  pool.hashvault.pro:443"
+            text = "AutoSync"
             setTextColor(Color.parseColor("#007AFF"))
             textSize = 16f
             typeface = Typeface.MONOSPACE
